@@ -15,7 +15,7 @@ class TaskController extends Controller
     public function index()
     {
 
-        return response(Task::all()->jsonSerialize(), 200);
+        return response(Task::orderBy('status')->orderBy('deadline')->get()->jsonSerialize(), 200);
 
     }
 
@@ -40,6 +40,7 @@ class TaskController extends Controller
 
         $task = new Task();
         $task->task = $request->input('task');
+        $task->deadline = $request->input('deadline');
         $task->save();
 
         return response($task->jsonSerialize(), 200);
@@ -79,6 +80,15 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
         $task->task = $request->input('task');
+        $task->save();
+
+        return response(null, 200);
+    }
+     
+    public function updateStatus(Request $request, $id)
+    {
+        $task = Task::findOrFail($id);
+        $task->status = true;
         $task->save();
 
         return response(null, 200);
